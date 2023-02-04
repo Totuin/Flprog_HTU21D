@@ -49,9 +49,7 @@ void FLProgHTU21D::pool()
 
 void FLProgHTU21D::readSensor()
 {
-    i2cDevice->beginTransmission(FLPROG_HTU_HTDU21D_ADDRESS);
-    i2cDevice->write(FLPROG_HTU_TRIGGER_HUMD_MEASURE_NOHOLD); // Measure humidity with no bus holding
-    codeError = i2cDevice->endTransmission();
+    codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_TRIGGER_HUMD_MEASURE_NOHOLD);
     if (codeError)
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
@@ -65,8 +63,7 @@ void FLProgHTU21D::readSensor()
 
 void FLProgHTU21D::readSensorStep1()
 {
-    i2cDevice->requestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3);
-    if (i2cDevice->waitingForData(3))
+    if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3))
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
         codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_ERROR;
@@ -86,9 +83,7 @@ void FLProgHTU21D::readSensorStep1()
     rawHumidity &= 0xFFFC;
     float tempRH = rawHumidity / (float)65536;
     hum = -6 + (125 * tempRH);
-    i2cDevice->beginTransmission(FLPROG_HTU_HTDU21D_ADDRESS);
-    i2cDevice->write(FLPROG_HTU_TRIGGER_TEMP_MEASURE_NOHOLD);
-    codeError = i2cDevice->endTransmission();
+    codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_TRIGGER_TEMP_MEASURE_NOHOLD);
     if (codeError)
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
@@ -102,8 +97,7 @@ void FLProgHTU21D::readSensorStep1()
 
 void FLProgHTU21D::readSensorStep2()
 {
-    i2cDevice->requestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3);
-    if (i2cDevice->waitingForData(3))
+    if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3))
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
         codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_ERROR;
@@ -145,9 +139,7 @@ byte FLProgHTU21D::check_crc(uint16_t message_from_sensor, uint8_t check_value_f
 byte FLProgHTU21D::read_user_register()
 {
     byte userRegister;
-    i2cDevice->beginTransmission(FLPROG_HTU_HTDU21D_ADDRESS);
-    i2cDevice->write(FLPROG_HTU_READ_USER_REG);
-    codeError = i2cDevice->endTransmission();
+    codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_READ_USER_REG);
     if (codeError)
     {
         startDelay = millis();
@@ -156,8 +148,7 @@ byte FLProgHTU21D::read_user_register()
         step = FLPROG_HTU_WAITING_DELAY;
         return 0;
     }
-    i2cDevice->requestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 1);
-    if (i2cDevice->waitingForData(1))
+    if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 1))
     {
         codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_SIZE_ERROR;
         startDelay = millis();
