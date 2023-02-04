@@ -42,6 +42,7 @@ private:
     byte read_user_register();
     byte check_crc(uint16_t message_from_sensor, uint8_t check_value_from_sensor);
     void setResolution();
+    void createError();
     FLProgI2C *i2cDevice;
     uint8_t step = FLPROG_HTU_WAITING_READ_STEP;
     uint8_t codeError = FLPROG_HTU_NOT_ERROR;

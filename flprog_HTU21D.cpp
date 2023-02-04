@@ -47,12 +47,20 @@ void FLProgHTU21D::pool()
     }
 }
 
+void FLProgHTU21D::createError()
+{
+    startDelay = millis();
+    sizeDelay = 500;
+    stepAfterDelay = FLPROG_HTU_WAITING_READ_STEP;
+    step = FLPROG_HTU_WAITING_DELAY;
+}
+
 void FLProgHTU21D::readSensor()
 {
     codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_TRIGGER_HUMD_MEASURE_NOHOLD);
     if (codeError)
     {
-        step = FLPROG_HTU_WAITING_READ_STEP;
+        createError();
         return;
     }
     startDelay = millis();
@@ -63,18 +71,15 @@ void FLProgHTU21D::readSensor()
 
 void FLProgHTU21D::readSensorStep1()
 {
-    if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3))
+    uint8_t temp[3];
+    codeError = i2cDevice->fullRead(FLPROG_HTU_HTDU21D_ADDRESS, temp, 3);
+    if (codeError)
     {
-        step = FLPROG_HTU_WAITING_READ_STEP;
-        codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_ERROR;
+        createError();
         return;
     }
-    byte msb, lsb, checksum;
-    msb = i2cDevice->read();
-    lsb = i2cDevice->read();
-    checksum = i2cDevice->read();
-    unsigned int rawHumidity = ((unsigned int)msb << 8) | (unsigned int)lsb;
-    if (check_crc(rawHumidity, checksum) != 0)
+    unsigned int rawHumidity = ((unsigned int)(temp[0]) << 8) | (unsigned int)(temp[1]);
+    if (check_crc(rawHumidity, (temp[2])) != 0)
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
         codeError = FLPROG_HTU_CRC_ERROR;
@@ -86,7 +91,7 @@ void FLProgHTU21D::readSensorStep1()
     codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_TRIGGER_TEMP_MEASURE_NOHOLD);
     if (codeError)
     {
-        step = FLPROG_HTU_WAITING_READ_STEP;
+        createError();
         return;
     }
     startDelay = millis();
@@ -97,18 +102,15 @@ void FLProgHTU21D::readSensorStep1()
 
 void FLProgHTU21D::readSensorStep2()
 {
-    if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 3))
+    uint8_t temp[3];
+    codeError = i2cDevice->fullRead(FLPROG_HTU_HTDU21D_ADDRESS, temp, 3);
+    if (codeError)
     {
-        step = FLPROG_HTU_WAITING_READ_STEP;
-        codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_ERROR;
+        createError();
         return;
     }
-    unsigned char msb, lsb, checksum;
-    msb = i2cDevice->read();
-    lsb = i2cDevice->read();
-    checksum = i2cDevice->read();
-    unsigned int rawTemperature = ((unsigned int)msb << 8) | (unsigned int)lsb;
-    if (check_crc(rawTemperature, checksum) != 0)
+    unsigned int rawTemperature = ((unsigned int)(temp[0]) << 8) | (unsigned int)(temp[1]);
+    if (check_crc(rawTemperature, (temp[2])) != 0)
     {
         step = FLPROG_HTU_WAITING_READ_STEP;
         codeError = FLPROG_HTU_CRC_ERROR;
@@ -142,19 +144,12 @@ byte FLProgHTU21D::read_user_register()
     codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_READ_USER_REG);
     if (codeError)
     {
-        startDelay = millis();
-        sizeDelay = 500;
-        stepAfterDelay = FLPROG_HTU_WAITING_READ_STEP;
-        step = FLPROG_HTU_WAITING_DELAY;
+        createError();
         return 0;
     }
     if (i2cDevice->fullRequestFrom(FLPROG_HTU_HTDU21D_ADDRESS, 1))
     {
-        codeError = FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_SIZE_ERROR;
-        startDelay = millis();
-        sizeDelay = 500;
-        stepAfterDelay = FLPROG_HTU_WAITING_READ_STEP;
-        step = FLPROG_HTU_WAITING_DELAY;
+        createError();
         return 0;
     }
     userRegister = i2cDevice->read();
@@ -197,10 +192,7 @@ void FLProgHTU21D::setResolution()
     codeError = i2cDevice->endTransmission();
     if (codeError)
     {
-        startDelay = millis();
-        sizeDelay = 500;
-        stepAfterDelay = FLPROG_HTU_WAITING_READ_STEP;
-        step = FLPROG_HTU_WAITING_DELAY;
+        createError();
         return;
     }
     curenrResolution = newResBits;
