@@ -148,7 +148,7 @@ byte FLProgHTU21D::check_crc(uint16_t message_from_sensor, uint8_t check_value_f
 
 byte FLProgHTU21D::read_user_register()
 {
-    byte userRegister;
+    uint8_t userRegister;
     codeError = i2cDevice->fullWrite(FLPROG_HTU_HTDU21D_ADDRESS, FLPROG_HTU_READ_USER_REG);
     if (codeError)
     {
