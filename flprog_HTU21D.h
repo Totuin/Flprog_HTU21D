@@ -11,12 +11,12 @@
 #define FLPROG_HTU_WRITE_USER_REG 0xE6
 #define FLPROG_HTU_READ_USER_REG 0xE7
 #define FLPROG_HTU_SOFT_RESET 0xFE
-#define FLPROG_HTU_SHIFTED_DIVISOR 0x988000 
+#define FLPROG_HTU_SHIFTED_DIVISOR 0x988000
 
 #define FLPROG_HTU_WAITING_READ_STEP 0
 #define FLPROG_HTU_WAITING_DELAY 1
 #define FLPROG_HTU_READ_SENSOR_STEP1 2
-#define  FLPROG_HTU_READ_SENSOR_STEP2 3
+#define FLPROG_HTU_READ_SENSOR_STEP2 3
 
 #define FLPROG_HTU_NOT_ERROR 0
 #define FLPROG_HTU_DEVICE_NOT_CORRECT_DATA_ERROR 70
@@ -33,6 +33,7 @@ public:
     uint8_t getError() { return codeError; };
     void resolution(uint8_t resBits);
     void read();
+    void setReadPeriod(uint32_t period);
 
 private:
     void checkDelay();
@@ -54,5 +55,6 @@ private:
     float hum = 0;
     uint8_t curenrResolution = 0;
     uint8_t newResBits = 0;
-    
+    uint32_t readPeriod = 0;
+    uint32_t startReadPeriod = 0;
 };

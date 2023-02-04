@@ -15,6 +15,14 @@ void FLProgHTU21D::checkDelay()
 
 void FLProgHTU21D::pool()
 {
+    if (readPeriod > 0)
+    {
+        if (flprog::isTimer(startReadPeriod, readPeriod))
+        {
+            startReadPeriod = millis();
+            read();
+        }
+    }
     if (step == FLPROG_HTU_WAITING_DELAY)
     {
         checkDelay();
@@ -196,4 +204,9 @@ void FLProgHTU21D::setResolution()
         return;
     }
     curenrResolution = newResBits;
+}
+
+void FLProgHTU21D::setReadPeriod(uint32_t period)
+{
+    readPeriod = period;
 }

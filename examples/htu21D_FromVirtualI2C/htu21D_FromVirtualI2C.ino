@@ -20,7 +20,6 @@ void setup()
 
 void loop()
 {
-
   if (flprog::isTimer(startTime, 1000))
   {
     Serial.print("Temperatura - ");
@@ -37,12 +36,10 @@ void loop()
   }
   else
   {
-
     if (flprog::isTimer(startTime1, 2000))
     {
       startCicleTime = micros();
       sensor.pool();
-
       cicleTime = micros() - startCicleTime;
       maxCicleTime = max(maxCicleTime, cicleTime);
     }

@@ -12,12 +12,14 @@ void setup()
 {
     Serial.begin(9600);
     wireDevice.begin();
+    sensor.setReadPeriod(1000);
     startTime = millis() + 3000;
     startTime1 = millis() + 3000;
 }
 
 void loop()
 {
+    sensor.pool();
     if (flprog::isTimer(startTime, 1000))
     {
         Serial.print("Temperatura - ");
@@ -30,20 +32,14 @@ void loop()
         Serial.println(maxCicleTime);
         Serial.println();
         startTime = millis();
-        sensor.read();
     }
     else
     {
         if (flprog::isTimer(startTime1, 2000))
         {
             startCicleTime = micros();
-            sensor.pool();
             cicleTime = micros() - startCicleTime;
             maxCicleTime = max(maxCicleTime, cicleTime);
-        }
-        else
-        {
-            sensor.pool();
         }
     }
 }
