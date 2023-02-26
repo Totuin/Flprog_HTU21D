@@ -1,6 +1,7 @@
 #pragma once
 #include "Arduino.h"
 #include "flprogUtilites.h"
+#include "flprogI2C.h"
 
 
 #define FLPROG_HTU_TRIGGER_TEMP_MEASURE_HOLD 0xE3
