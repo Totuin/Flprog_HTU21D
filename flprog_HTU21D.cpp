@@ -1,6 +1,6 @@
 #include "flprog_HTU21D.h"
 
-FLProgHTU21D::FLProgHTU21D(FLProgI2C *device)
+FLProgHTU21D::FLProgHTU21D(AbstractFLProgI2C *device)
 {
     i2cDevice = device;
     addres = 0x40;

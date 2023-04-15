@@ -22,7 +22,7 @@
 class FLProgHTU21D : public FLProgI2cStepWorkSensor
 {
 public:
-    FLProgHTU21D(FLProgI2C *device);
+    FLProgHTU21D(AbstractFLProgI2C *device);
     void pool();
     float getHumidity() { return hum; };
     float getTemperature() { return temper; };
