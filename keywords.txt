@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+#######################################
+# # Datatypes (KEYWORD1)
+#######################################
+FLProgHTU21D	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+getHumidity	KEYWORD2
+getTemperature	KEYWORD2
+pool	KEYWORD2
+resolution	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+FLPROG_HTU_READ_SENSOR_STEP1	LITERAL1
+FLPROG_HTU_READ_SENSOR_STEP2	LITERAL1
+FLPROG_HTU_READ_USER_REG	LITERAL1
+FLPROG_HTU_SHIFTED_DIVISOR	LITERAL1
+FLPROG_HTU_SOFT_RESET	LITERAL1
+FLPROG_HTU_TRIGGER_HUMD_MEASURE_HOLD	LITERAL1
+FLPROG_HTU_TRIGGER_HUMD_MEASURE_NOHOLD	LITERAL1
+FLPROG_HTU_TRIGGER_TEMP_MEASURE_HOLD	LITERAL1
+FLPROG_HTU_TRIGGER_TEMP_MEASURE_NOHOLD	LITERAL1
+FLPROG_HTU_WRITE_USER_REG	LITERAL1
